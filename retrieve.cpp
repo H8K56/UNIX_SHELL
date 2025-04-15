@@ -7,6 +7,12 @@
 
 #define MAX_INPUT_LENGTH 100
 
+void display_input(char* args[]) {
+    printf("Command: %s\n", args[0]);
+    for (int i = 1; args[i] != NULL; i++) {
+        printf("Argument %d: %s\n", i, args[i]);
+    }
+}
 // Check if command exits
 int is_builtin(const char* cmd) {
     char command[256];
@@ -151,17 +157,20 @@ void handle_builtin(char* args[]) {
             break;
         }
     }
+    
+    for (int i = 0; i < MAX_INPUT_LENGTH; i++) {
+        if (args1[i] == NULL) {
+            if (i > 0) {
+                args1[i - 1] = NULL;
+            }
+            break;
+        }
+    }
 
     if (is_pipe) {
+        printf("Pipe detected\n");
         execute_pipeline(args1, args2);
     } else {
         create_process(args1,0);
-    }
-}
-
-void display_input(char* args[]) {
-    printf("Command: %s\n", args[0]);
-    for (int i = 1; args[i] != NULL; i++) {
-        printf("Argument %d: %s\n", i, args[i]);
     }
 }
