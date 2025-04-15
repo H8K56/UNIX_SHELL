@@ -50,7 +50,7 @@ int redirect_io(char* args[]){
     return 0;
 }
 
-int create_process(char* args[], int background = 0){
+int create_process(char* args[], int background) {
     pid_t pid = fork();
     int status;
 
@@ -58,19 +58,21 @@ int create_process(char* args[], int background = 0){
         perror("Fork error");
         return -1;
     } else if (pid == 0) {
+        // In child process
         if (execvp(args[0], args) == -1) {
             perror("Execution error");
             exit(EXIT_FAILURE);
         }
-    } else if(pid > 0){
-        // // background = 0 (foreground process) else (background process);
-        // if (!background) {
-        //     wait(NULL);
-        // }
-        wait(&status);
+    } else {
+        if (!background) {
+            waitpid(pid, &status, 0);
+        } else {
+            printf("Background process started with PID: %d\n", pid);
+        }
     }
     return 0;
 }
+
 
 void execute_command(char* args[]) {
     if (args[0] == NULL) {
@@ -115,7 +117,7 @@ void handle_builtin(char* args[]) {
     if (is_pipe) {
         execute_pipeline(args1, args2);
     } else {
-        create_process(args1);
+        create_process(args1,0);
     }
 }
 
