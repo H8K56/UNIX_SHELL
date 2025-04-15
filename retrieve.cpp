@@ -7,7 +7,22 @@
 
 
 int is_builtin(const char* cmd) {
+    char command[256];
 
+    snprintf(command, sizeof(command), "which %s > /dev/null 2>&1", cmd);
+
+    int result = system(command); 
+
+    if (result == -1) {
+        perror("system");
+        return -1;
+    }
+
+    if (result == 0) {
+        return 1; // Command exists
+    }
+
+    return 0;
 }
 
 int redirect_io(char* args[]){
