@@ -5,6 +5,8 @@
 #include <string.h>
 #include <sys/wait.h>
 
+#define MAX_INPUT_LENGTH 100
+
 // Check if command exits
 int is_builtin(const char* cmd) {
     char command[256];
@@ -89,8 +91,32 @@ void execute_pipeline(char* args1[], char* args2[]) {
 }
 
 void handle_builtin(char* args[]) {
-    create_process(args, 0);
-    return;
+    char* args1[MAX_INPUT_LENGTH] = {0};
+    char* args2[MAX_INPUT_LENGTH] = {0};
+    bool is_pipe = false;
+
+    // this wiil check for parallel or pipe input
+    for (int i = 0;args[i] != NULL;i++){
+        args1[i] = args[i];
+        if (strcmp(args[i],"&") == 0){
+            // insert function for parallel execution
+        }else if (strcmp(args[i],"|") == 0){
+            is_pipe = true;
+            args[i] = NULL;
+            i++;
+            // fill second half of the pipe
+            for (int j = 0; args[i] != NULL; i++, j++){
+                args2[j] = args[i];
+            }
+            break;
+        }
+    }
+
+    if (is_pipe) {
+        execute_pipeline(args1, args2);
+    } else {
+        create_process(args1);
+    }
 }
 
 void display_input(char* args[]) {
