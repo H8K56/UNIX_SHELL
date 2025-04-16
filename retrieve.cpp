@@ -7,12 +7,13 @@
 
 #define MAX_INPUT_LENGTH 100
 
-void display_input(char* args[]) {
-    printf("Command: %s\n", args[0]);
-    for (int i = 1; args[i] != NULL; i++) {
-        printf("Argument %d: %s\n", i, args[i]);
-    }
-}
+// Uncomment this function to display the input
+// void display_input(char* args[]) {
+//     printf("Command: %s\n", args[0]);
+//     for (int i = 1; args[i] != NULL; i++) {
+//         printf("Argument %d: %s\n", i, args[i]);
+//     }
+// }
 
 // Check if command exits
 int is_builtin(const char* cmd) {
