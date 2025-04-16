@@ -13,6 +13,7 @@ void display_input(char* args[]) {
         printf("Argument %d: %s\n", i, args[i]);
     }
 }
+
 // Check if command exits
 int is_builtin(const char* cmd) {
     char command[256];
@@ -64,7 +65,6 @@ int create_process(char* args[], int background) {
         perror("Fork error");
         return -1;
     } else if (pid == 0) {
-        // In child process
         if (execvp(args[0], args) == -1) {
             perror("Execution error");
             exit(EXIT_FAILURE);
@@ -93,6 +93,28 @@ void execute_command(char* args[]) {
         printf("Command does not exist\n");
     }
 }
+
+void execute_parallel(char* args[]) {
+    char* current_command[MAX_INPUT_LENGTH] = {0};
+    int arg_index = 0;
+
+    for (int i = 0; i < MAX_INPUT_LENGTH && args[i] != NULL; i++) {
+        if (strcmp(args[i], "&") == 0) {
+            current_command[arg_index] = NULL;
+            create_process(current_command, 1);
+            arg_index = 0;
+        } else {
+            current_command[arg_index++] = args[i];
+        }
+    }
+
+    if (arg_index > 0) { // 
+        current_command[arg_index] = NULL;
+        create_process(current_command, 1);
+    }
+}
+
+
 
 void execute_pipeline(char* args1[], char* args2[]) {
     int pipefd[2];
@@ -139,13 +161,14 @@ void execute_pipeline(char* args1[], char* args2[]) {
 void handle_builtin(char* args[]) {
     char* args1[MAX_INPUT_LENGTH] = {0};
     char* args2[MAX_INPUT_LENGTH] = {0};
-    bool is_pipe = false;
+    bool is_pipe = false, is_parallel = false;
 
     // this wiil check for parallel or pipe input
     for (int i = 0;args[i] != NULL;i++){
         args1[i] = args[i];
         if (strcmp(args[i],"&") == 0){
-            // insert function for parallel execution
+            is_parallel = true;
+            break;
         }else if (strcmp(args[i],"|") == 0){
             is_pipe = true;
             args[i] = NULL;
@@ -167,7 +190,10 @@ void handle_builtin(char* args[]) {
         }
     }
 
-    if (is_pipe) {
+    if (is_parallel){
+        printf("Parallel command detected\n");
+        execute_parallel(args);
+    }else if (is_pipe) {
         printf("Pipe detected\n");
         execute_pipeline(args1, args2);
     } else {
