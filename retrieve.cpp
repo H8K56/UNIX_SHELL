@@ -198,6 +198,6 @@ void handle_builtin(char* args[]) {
         printf("Pipe detected\n");
         execute_pipeline(args1, args2);
     } else {
-        create_process(args1,0);
+        create_process(args,0);
     }
 }
