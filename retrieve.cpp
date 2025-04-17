@@ -1,14 +1,20 @@
 #include "retrieve.h"
 
-// Uncomment this function to display the input
-// void display_input(char* args[]) {
-//     printf("Command: %s\n", args[0]);
-//     for (int i = 1; args[i] != NULL; i++) {
-//         printf("Argument %d: %s\n", i, args[i]);
-//     }
-// }
-
 // Check if command exits
+
+/**
+ * @brief Checks if a given command is a built-in command or available in the system's PATH.
+ *
+ * This function uses the `which` command to determine if the specified command
+ * exists in the system's PATH. It executes the `which` command via the `system` function
+ * and checks the result.
+ *
+ * @param cmd A C-string representing the command to check.
+ *            It should not be null and must point to a valid null-terminated string.
+ *
+ * @return Returns 1 if the command is found (indicating it is built-in or available),
+ *         0 if the command is not found, and -1 if an error occurs while executing the `system` call.
+ */
 int CommandExecutor::is_builtin(const char* cmd) {
     char command[256];
     snprintf(command, sizeof(command), "which %s > /dev/null 2>&1", cmd);
