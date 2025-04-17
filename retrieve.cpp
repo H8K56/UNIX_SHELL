@@ -224,6 +224,16 @@ void CommandExecutor::execute_pipeline_internal(char* args1[], char* args2[]) {
 }
 
 
+/**
+ * @brief Handles built-in commands and executes them.
+ *
+ * This function processes built-in commands, including handling input/output
+ * redirection, command pipelines, and parallel execution. It modifies the
+ * arguments array to separate commands and handles them accordingly.
+ *
+ * @param args An array of C-style strings representing the command and its arguments.
+ *             The first element should be the command name, followed by its arguments.
+ */
 void CommandExecutor::handle_builtin(char* args[]) {
     char* args1[MAX_INPUT_LENGTH] = {0};
     char* args2[MAX_INPUT_LENGTH] = {0};
