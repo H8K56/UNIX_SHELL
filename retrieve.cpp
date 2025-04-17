@@ -106,7 +106,8 @@ void CommandExecutor::execute_parallel_internal(char* args[]) {
 }
 
 
-void execute_pipeline(char* args1[], char* args2[]) {
+
+void CommandExecutor::execute_pipeline_internal(char* args1[], char* args2[]) {
     int pipefd[2];
     pid_t pid1, pid2;
 
@@ -114,7 +115,7 @@ void execute_pipeline(char* args1[], char* args2[]) {
         perror("Pipe error");
         return;
     }
-    // first half of the pipe
+
     pid1 = fork();
     if (pid1 == -1) {
         perror("Fork error");
@@ -130,7 +131,6 @@ void execute_pipeline(char* args1[], char* args2[]) {
         exit(EXIT_FAILURE);
     }
 
-    // second half of the pipe
     pid2 = fork();
     if (pid2 == -1) {
         perror("Fork error");
@@ -145,7 +145,11 @@ void execute_pipeline(char* args1[], char* args2[]) {
         perror("Execution error of second command");
         exit(EXIT_FAILURE);
     }
-    return;
+
+    close(pipefd[0]);
+    close(pipefd[1]);
+    waitpid(pid1, NULL, 0);
+    waitpid(pid2, NULL, 0);
 }
 
 void handle_builtin(char* args[]) {
