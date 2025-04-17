@@ -12,6 +12,8 @@ int main() {
     char input[MAX_INPUT_LENGTH];
     char* args[MAX_INPUT_LENGTH];
 
+    CommandExecutor executor;
+
     while (true) {
         std::cout << "wish> ";
         if (!std::cin.getline(input, MAX_INPUT_LENGTH)) {
@@ -37,7 +39,7 @@ int main() {
             break;
         }
 
-        handle_builtin(args);
+        executor.handle_builtin(args);
     }
 
     return 0;
