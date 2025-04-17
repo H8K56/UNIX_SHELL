@@ -164,7 +164,20 @@ void CommandExecutor::execute_parallel_internal(char* args[]) {
 }
 
 
-
+/**
+ * @brief Executes a command pipeline.
+ *
+ * This function sets up a pipeline between two commands, allowing the output
+ * of the first command to be used as the input for the second command. It uses
+ * the `pipe` system call to create a unidirectional data channel between the
+ * two processes.
+ *
+ * @param args1 An array of C-style strings representing the first command and its arguments.
+ *              The first element should be the command name, followed by its arguments.
+ *
+ * @param args2 An array of C-style strings representing the second command and its arguments.
+ *              The first element should be the command name, followed by its arguments.
+ */
 void CommandExecutor::execute_pipeline_internal(char* args1[], char* args2[]) {
     int pipefd[2];
     pid_t pid1, pid2;
