@@ -44,7 +44,7 @@ int CommandExecutor::redirect_io(char* args[]) {
     return 0;
 }
 
-int create_process(char* args[], int background) {
+int CommandExecutor::create_process(char* args[], int background) {
     pid_t pid = fork();
     int status;
 
@@ -56,12 +56,10 @@ int create_process(char* args[], int background) {
             perror("Execution error");
             exit(EXIT_FAILURE);
         }
+    } else if (!background) {
+        waitpid(pid, &status, 0);
     } else {
-        if (!background) {
-            waitpid(pid, &status, 0);
-        } else {
-            printf("Background process started with PID: %d\n", pid);
-        }
+        printf("Background process started with PID: %d\n", pid);
     }
     return 0;
 }
