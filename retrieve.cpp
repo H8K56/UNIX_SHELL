@@ -1,4 +1,5 @@
 #include "retrieve.h"
+#include "assert.h"
 
 // Check if command exits
 
@@ -21,7 +22,7 @@ int CommandExecutor::is_builtin(const char* cmd) {
     int result = system(command);
 
     if (result == -1) {
-        perror("system");
+        assert("system");
         return -1;
     }
     return result == 0;
@@ -42,13 +43,13 @@ int CommandExecutor::is_builtin(const char* cmd) {
  *
  * @return Returns 0 on success, or -1 if an error occurs (e.g., file opening
  *         fails). In case of an error, an appropriate error message is printed
- *         using `perror`.
+ *         using `assert`.
  */
 int CommandExecutor::redirect_io(char* args[]) {
     if (strcmp(args[1], ">") == 0) {
         FILE* file = fopen(args[2], "w");
         if (file == NULL) {
-            perror("File opening error");
+            assert("File opening error");
             return -1;
         }
         dup2(fileno(file), STDOUT_FILENO);
@@ -57,7 +58,7 @@ int CommandExecutor::redirect_io(char* args[]) {
     } else if (strcmp(args[1], "<") == 0) {
         FILE* file = fopen(args[2], "r");
         if (file == NULL) {
-            perror("File opening error");
+            assert("File opening error");
             return -1;
         }
         dup2(fileno(file), STDIN_FILENO);
@@ -88,11 +89,11 @@ int CommandExecutor::create_process(char* args[], int background) {
     int status;
 
     if (pid < 0) {
-        perror("Fork error");
+        assert("Fork error");
         return -1;
     } else if (pid == 0) {
         if (execvp(args[0], args) == -1) {
-            perror("Execution error");
+            assert("Execution error");
             exit(EXIT_FAILURE);
         }
     } else if (!background) {
@@ -183,13 +184,13 @@ void CommandExecutor::execute_pipeline_internal(char* args1[], char* args2[]) {
     pid_t pid1, pid2;
 
     if (pipe(pipefd) == -1) {
-        perror("Pipe error");
+        assert("Pipe error");
         return;
     }
 
     pid1 = fork();
     if (pid1 == -1) {
-        perror("Fork error");
+        assert("Fork error");
         return;
     }
 
@@ -198,13 +199,13 @@ void CommandExecutor::execute_pipeline_internal(char* args1[], char* args2[]) {
         close(pipefd[0]);
         close(pipefd[1]);
         execvp(args1[0], args1);
-        perror("Execution error of first command");
+        assert("Execution error of first command");
         exit(EXIT_FAILURE);
     }
 
     pid2 = fork();
     if (pid2 == -1) {
-        perror("Fork error");
+        assert("Fork error");
         return;
     }
 
@@ -213,7 +214,7 @@ void CommandExecutor::execute_pipeline_internal(char* args1[], char* args2[]) {
         close(pipefd[0]);
         close(pipefd[1]);
         execvp(args2[0], args2);
-        perror("Execution error of second command");
+        assert("Execution error of second command");
         exit(EXIT_FAILURE);
     }
 
