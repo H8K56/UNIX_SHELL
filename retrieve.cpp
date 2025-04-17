@@ -27,6 +27,23 @@ int CommandExecutor::is_builtin(const char* cmd) {
     return result == 0;
 }
 
+/**
+ * @brief Redirects input or output based on the specified arguments.
+ *
+ * This function handles input/output redirection for a command by modifying
+ * the standard input (STDIN) or standard output (STDOUT) file descriptors.
+ * It supports redirection operators `>` for output redirection and `<` for
+ * input redirection.
+ *
+ * @param args An array of C-style strings representing the command and its
+ *             arguments. The redirection operator (e.g., `>` or `<`) is
+ *             expected at `args[1]`, and the target file path is expected
+ *             at `args[2]`.
+ *
+ * @return Returns 0 on success, or -1 if an error occurs (e.g., file opening
+ *         fails). In case of an error, an appropriate error message is printed
+ *         using `perror`.
+ */
 int CommandExecutor::redirect_io(char* args[]) {
     if (strcmp(args[1], ">") == 0) {
         FILE* file = fopen(args[2], "w");
@@ -50,6 +67,22 @@ int CommandExecutor::redirect_io(char* args[]) {
     return 0;
 }
 
+/**
+ * @brief Creates a new process to execute a command.
+ *
+ * This function forks the current process and executes the specified command
+ * using `execvp`. It handles both foreground and background execution based on
+ * the `background` parameter.
+ *
+ * @param args An array of C-style strings representing the command and its arguments.
+ *             The first element should be the command name, followed by its arguments.
+ *
+ * @param background An integer indicating whether to run the command in the background (1)
+ *                   or foreground (0). If set to 1, the function does not wait for
+ *                   the child process to finish.
+ *
+ * @return Returns 0 on success, or -1 if an error occurs during process creation or execution.
+ */
 int CommandExecutor::create_process(char* args[], int background) {
     pid_t pid = fork();
     int status;
