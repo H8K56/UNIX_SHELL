@@ -261,6 +261,15 @@ void CommandExecutor::handle_builtin(char* args[]) {
         }
     }
 
+    for (int i = 0; i < MAX_INPUT_LENGTH; i++) {
+        if (args1[i] == NULL) {
+            if (i > 0) {
+                args1[i - 1] = NULL;
+            }
+            break;
+        }
+    }
+
     if (is_parallel) {
         execute_parallel(args);
     } else if (is_pipe) {
