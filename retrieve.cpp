@@ -103,7 +103,16 @@ int CommandExecutor::create_process(char* args[], int background) {
     return 0;
 }
 
-
+/**
+ * @brief Executes a command based on the provided arguments.
+ *
+ * This function checks if the command is built-in or available in the system's PATH.
+ * If it is a built-in command, it handles it accordingly. Otherwise, it creates a new
+ * process to execute the command.
+ *
+ * @param args An array of C-style strings representing the command and its arguments.
+ *             The first element should be the command name, followed by its arguments.
+ */
 void CommandExecutor::execute_command(char* args[]) {
     if (args[0] == NULL) {
         fprintf(stderr, "No command entered\n");
