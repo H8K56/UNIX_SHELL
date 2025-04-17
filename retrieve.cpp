@@ -21,7 +21,7 @@ int CommandExecutor::is_builtin(const char* cmd) {
     return result == 0;
 }
 
-int redirect_io(char* args[]){
+int CommandExecutor::redirect_io(char* args[]) {
     if (strcmp(args[1], ">") == 0) {
         FILE* file = fopen(args[2], "w");
         if (file == NULL) {
