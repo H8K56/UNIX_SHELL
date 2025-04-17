@@ -14,7 +14,7 @@ private:
     int is_builtin(const char* cmd);
     int redirect_io(char* args[]);
     int create_process(char* args[], int background);
-    
+
     // I kept these private in accordance with defensive programming
     void execute_pipeline_internal(char* args1[], char* args2[]);
     void execute_parallel_internal(char* args[]); 
@@ -24,6 +24,7 @@ public:
     void execute_pipeline(char* args1[], char* args2[]);
     void execute_parallel(char* args[]);
     void handle_builtin(char* args[]);
+    int get_input_length();
 };
 
 #endif
