@@ -133,6 +133,16 @@ void CommandExecutor::execute_parallel(char* args[]) {
     execute_parallel_internal(args);
 }
 
+/**
+ * @brief Executes a command in parallel.
+ *
+ * This function handles the execution of commands in parallel by creating
+ * separate processes for each command. It uses the `fork` system call to create
+ * child processes and executes the commands using `execvp`.
+ *
+ * @param args An array of C-style strings representing the command and its arguments.
+ *             The first element should be the command name, followed by its arguments.
+ */
 void CommandExecutor::execute_parallel_internal(char* args[]) {
     char* current_command[MAX_INPUT_LENGTH] = {0};
     int arg_index = 0;
