@@ -77,7 +77,15 @@ void CommandExecutor::execute_command(char* args[]) {
     }
 }
 
-void execute_parallel(char* args[]) {
+void CommandExecutor::execute_pipeline(char* args1[], char* args2[]) {
+    execute_pipeline_internal(args1, args2);
+}
+
+void CommandExecutor::execute_parallel(char* args[]) {
+    execute_parallel_internal(args);
+}
+
+void CommandExecutor::execute_parallel_internal(char* args[]) {
     char* current_command[MAX_INPUT_LENGTH] = {0};
     int arg_index = 0;
 
@@ -91,12 +99,11 @@ void execute_parallel(char* args[]) {
         }
     }
 
-    if (arg_index > 0) { // 
+    if (arg_index > 0) {
         current_command[arg_index] = NULL;
         create_process(current_command, 1);
     }
 }
-
 
 
 void execute_pipeline(char* args1[], char* args2[]) {
