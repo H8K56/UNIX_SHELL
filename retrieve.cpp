@@ -3,6 +3,11 @@
 
 // Check if command exits
 
+int CommandExecutor::get_input_length(){
+    return MAX_INPUT_LENGTH;
+}
+
+
 /**
  * @brief Checks if a given command is a built-in command or available in the system's PATH.
  *
