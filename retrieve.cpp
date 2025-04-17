@@ -1,11 +1,4 @@
 #include "retrieve.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/wait.h>
-
-#define MAX_INPUT_LENGTH 100
 
 // Uncomment this function to display the input
 // void display_input(char* args[]) {
@@ -16,23 +9,16 @@
 // }
 
 // Check if command exits
-int is_builtin(const char* cmd) {
+int CommandExecutor::is_builtin(const char* cmd) {
     char command[256];
-
     snprintf(command, sizeof(command), "which %s > /dev/null 2>&1", cmd);
-
-    int result = system(command); 
+    int result = system(command);
 
     if (result == -1) {
         perror("system");
         return -1;
     }
-
-    if (result == 0) {
-        return 1; // Command exists
-    }
-
-    return 0;
+    return result == 0;
 }
 
 int redirect_io(char* args[]){
