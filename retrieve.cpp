@@ -152,45 +152,33 @@ void CommandExecutor::execute_pipeline_internal(char* args1[], char* args2[]) {
     waitpid(pid2, NULL, 0);
 }
 
-void handle_builtin(char* args[]) {
+
+void CommandExecutor::handle_builtin(char* args[]) {
     char* args1[MAX_INPUT_LENGTH] = {0};
     char* args2[MAX_INPUT_LENGTH] = {0};
     bool is_pipe = false, is_parallel = false;
 
-    // this wiil check for parallel or pipe input
-    for (int i = 0;args[i] != NULL;i++){
+    for (int i = 0; args[i] != NULL; i++) {
         args1[i] = args[i];
-        if (strcmp(args[i],"&") == 0){
+        if (strcmp(args[i], "&") == 0) {
             is_parallel = true;
             break;
-        }else if (strcmp(args[i],"|") == 0){
+        } else if (strcmp(args[i], "|") == 0) {
             is_pipe = true;
             args[i] = NULL;
             i++;
-            // fill second half of the pipe
-            for (int j = 0; args[i] != NULL; i++, j++){
+            for (int j = 0; args[i] != NULL; i++, j++) {
                 args2[j] = args[i];
             }
             break;
         }
     }
-    
-    for (int i = 0; i < MAX_INPUT_LENGTH; i++) {
-        if (args1[i] == NULL) {
-            if (i > 0) {
-                args1[i - 1] = NULL;
-            }
-            break;
-        }
-    }
 
-    if (is_parallel){
-        printf("Parallel command detected\n");
+    if (is_parallel) {
         execute_parallel(args);
-    }else if (is_pipe) {
-        printf("Pipe detected\n");
+    } else if (is_pipe) {
         execute_pipeline(args1, args2);
     } else {
-        create_process(args,0);
+        create_process(args, 0);
     }
 }
