@@ -65,16 +65,14 @@ int CommandExecutor::create_process(char* args[], int background) {
 }
 
 
-void execute_command(char* args[]) {
+void CommandExecutor::execute_command(char* args[]) {
     if (args[0] == NULL) {
         fprintf(stderr, "No command entered\n");
         return;
     }
-
-    if(is_builtin(args[0]) == 1) {
+    if (is_builtin(args[0])) {
         handle_builtin(args);
-        return;
-    }else {
+    } else {
         printf("Command does not exist\n");
     }
 }
