@@ -6,13 +6,14 @@
 #include <iostream>
 #include "retrieve.cpp"
 
-#define MAX_INPUT_LENGTH 100
-
 int main() {
+    CommandExecutor executor;
+    
+    const int MAX_INPUT_LENGTH = executor.get_input_length();
+
     char input[MAX_INPUT_LENGTH];
     char* args[MAX_INPUT_LENGTH];
 
-    CommandExecutor executor;
 
     while (true) {
         std::cout << "wish> ";
