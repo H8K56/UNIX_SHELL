@@ -56,7 +56,7 @@ This project provides a simple implementation of a UNIX shell. The shell support
   ls | grep "file"
   ```
 
-- Check a command:
+- Check is a command exists:
   ```bash
-  command check ls
+  which ls
   ```
